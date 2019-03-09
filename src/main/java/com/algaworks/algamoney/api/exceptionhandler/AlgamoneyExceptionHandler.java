@@ -32,7 +32,7 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 
 		String msgUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-		String msgDesenvolvedor = ex.getCause().toString();
+		String msgDesenvolvedor = ex.getCause() != null ? ex.getCause().toString() : ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(msgUsuario, msgDesenvolvedor));
 		return super.handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
 	}
