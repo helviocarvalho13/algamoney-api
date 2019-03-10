@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,7 +32,6 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-
 		String msgUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
 		String msgDesenvolvedor = ex.getCause() != null ? ex.getCause().toString() : ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(msgUsuario, msgDesenvolvedor));
@@ -38,9 +39,8 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@Override
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, 
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-
 		List<Erro> erros = criarListaDeErros(ex.getBindingResult());
 		return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
 	}
@@ -54,45 +54,42 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 		List<Erro> erros = Arrays.asList(new Erro(msgUsuario, msgDesenvolvedor));
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request){
+		String msgUsuario = messageSource.getMessage("recurso.operacao-nao-permitida", null, LocaleContextHolder.getLocale());
+		String msgDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
+		List<Erro> erros = Arrays.asList(new Erro(msgUsuario, msgDesenvolvedor));
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
 	
 	private List<Erro> criarListaDeErros(BindingResult bindResult) {
 
 		List<Erro> erros = new ArrayList<>();
-
 		for (FieldError fieldError : bindResult.getFieldErrors()) {
-			
 			String msgUsuario = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
 			String msgDesenvolvedor = fieldError.toString();
-			
 			erros.add(new Erro(msgUsuario, msgDesenvolvedor));
 		}
-		
-
 		return erros;
 	}
 
 	public static class Erro {
-
 		private String msgUsuario;
 		private String msgDesenvolvedor;
-
 		public Erro(String msgUsuario, String msgDesenvolvedor) {
 			this.msgDesenvolvedor = msgDesenvolvedor;
 			this.msgUsuario = msgUsuario;
 		}
-
 		public String getMsgUsuario() {
 			return msgUsuario;
 		}
-
 		public void setMsgUsuario(String msgUsuario) {
 			this.msgUsuario = msgUsuario;
 		}
-
 		public String getMsgDesenvolvedor() {
 			return msgDesenvolvedor;
 		}
-
 		public void setMsgDesenvolvedor(String msgDesenvolvedor) {
 			this.msgDesenvolvedor = msgDesenvolvedor;
 		}
