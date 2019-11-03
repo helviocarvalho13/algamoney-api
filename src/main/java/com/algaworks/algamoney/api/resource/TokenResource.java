@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,23 +13,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algamoney.api.config.property.AlgamoneyApiProperty;
 
+@Profile("oauth-security")
 @RestController
 @RequestMapping("/tokens")
 public class TokenResource {
-
+	
 	@Autowired
 	private AlgamoneyApiProperty algamoneyApiProperty;
-	
+
 	@DeleteMapping("/revoke")
-	public void revoke(HttpServletRequest req, HttpServletResponse res) {
-		Cookie refreshTokenCookie = new Cookie("refreshToken", null );
-		refreshTokenCookie.setHttpOnly(true);
-//		refreshTokenCookie .setSecure(algamoneyApiProperty.getSeguranca().isEnableHttps()); // TODO: em producao 'true'
-		refreshTokenCookie .setSecure(false); // TODO: em producao 'true'
-		refreshTokenCookie.setPath(req.getContextPath() + "/oauth/token");
-		refreshTokenCookie .setMaxAge(0);
+	public void revoke(HttpServletRequest req, HttpServletResponse resp) {
+		Cookie cookie = new Cookie("refreshToken", null);
+		cookie.setHttpOnly(true);
+		cookie.setSecure(algamoneyApiProperty.getSeguranca().isEnableHttps());
+		cookie.setPath(req.getContextPath() + "/oauth/token");
+		cookie.setMaxAge(0);
 		
-		res.addCookie(refreshTokenCookie );
-		res.setStatus(HttpStatus.NO_CONTENT.value());
+		resp.addCookie(cookie);
+		resp.setStatus(HttpStatus.NO_CONTENT.value());
 	}
+	
 }

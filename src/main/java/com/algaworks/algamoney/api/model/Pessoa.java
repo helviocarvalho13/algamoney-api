@@ -6,9 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.Valid;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "pessoa")
@@ -18,18 +19,14 @@ public class Pessoa {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 
-	@Valid
 	@NotNull
-	@Size(min = 3, max = 20)
 	private String nome;
 
-	@Valid
-	@NotNull
-	private boolean ativo;
-
-	@Valid
 	@Embedded
 	private Endereco endereco;
+
+	@NotNull
+	private Boolean ativo;
 
 	public Long getCodigo() {
 		return codigo;
@@ -47,20 +44,26 @@ public class Pessoa {
 		this.nome = nome;
 	}
 
-	public boolean isAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(boolean ativo) {
-		this.ativo = ativo;
-	}
-
 	public Endereco getEndereco() {
 		return endereco;
 	}
 
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+	
+	@JsonIgnore
+	@Transient
+	public boolean isInativo() {
+		return !this.ativo;
 	}
 
 	@Override
@@ -87,5 +90,5 @@ public class Pessoa {
 			return false;
 		return true;
 	}
-
+	
 }

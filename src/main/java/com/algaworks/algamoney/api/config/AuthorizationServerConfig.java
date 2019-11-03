@@ -32,7 +32,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		clients.inMemory()
 				.withClient("angular")
 				.secret("@ngul@r0")
-				.scopes("read","write")
+				.scopes("read", "write")
 				.authorizedGrantTypes("password", "refresh_token")
 				.accessTokenValiditySeconds(1800)
 				.refreshTokenValiditySeconds(3600 * 24)
@@ -47,17 +47,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		
 		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
 		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
 		
 		endpoints
 			.tokenStore(tokenStore())
 			.tokenEnhancer(tokenEnhancerChain)
-//			.accessTokenConverter(accessTokenConverter())
 			.reuseRefreshTokens(false)
 			.authenticationManager(authenticationManager);
-			
 	}
 	
 	@Bean
@@ -71,10 +68,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
 	}
-
+	
 	@Bean
 	public TokenEnhancer tokenEnhancer() {
-		return new CustomTokenEnhancer();
+	    return new CustomTokenEnhancer();
 	}
-
+	
 }

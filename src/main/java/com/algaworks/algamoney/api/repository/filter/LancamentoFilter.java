@@ -1,4 +1,4 @@
-package com.algaworks.algamoney.api.resource.filter;
+package com.algaworks.algamoney.api.repository.filter;
 
 import java.time.LocalDate;
 
@@ -8,10 +8,10 @@ public class LancamentoFilter {
 
 	private String descricao;
 	
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataVencimentoDe;
 	
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataVencimentoAte;
 
 	public String getDescricao() {
@@ -37,4 +37,5 @@ public class LancamentoFilter {
 	public void setDataVencimentoAte(LocalDate dataVencimentoAte) {
 		this.dataVencimentoAte = dataVencimentoAte;
 	}
+
 }

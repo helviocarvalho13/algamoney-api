@@ -7,22 +7,22 @@ import org.springframework.context.ApplicationEvent;
 public class RecursoCriadoEvent extends ApplicationEvent {
 
 	private static final long serialVersionUID = 1L;
-
-	private HttpServletResponse httpServletResponse;
+	
+	private HttpServletResponse response;
 	private Long codigo;
 
-	public RecursoCriadoEvent(Object source, HttpServletResponse httpServletResponse, Long codigo) {
+	public RecursoCriadoEvent(Object source, HttpServletResponse response, Long codigo) {
 		super(source);
-		this.httpServletResponse = httpServletResponse;
+		this.response = response;
 		this.codigo = codigo;
 	}
 
-	public HttpServletResponse getHttpServletResponse() {
-		return httpServletResponse;
+	public HttpServletResponse getResponse() {
+		return response;
 	}
 
 	public Long getCodigo() {
 		return codigo;
 	}
-
+	
 }

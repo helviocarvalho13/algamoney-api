@@ -10,12 +10,13 @@ import com.algaworks.algamoney.api.repository.PessoaRepository;
 
 @Service
 public class PessoaService {
-
+	
 	@Autowired
 	private PessoaRepository pessoaRepository;
-	
-	public Pessoa atualizar( Long codigo, Pessoa pessoa ) {
+
+	public Pessoa atualizar(Long codigo, Pessoa pessoa) {
 		Pessoa pessoaSalva = buscarPessoaPeloCodigo(codigo);
+		
 		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo");
 		return pessoaRepository.save(pessoaSalva);
 	}
@@ -28,9 +29,10 @@ public class PessoaService {
 	
 	public Pessoa buscarPessoaPeloCodigo(Long codigo) {
 		Pessoa pessoaSalva = pessoaRepository.findOne(codigo);
-		if(pessoaSalva == null) {
+		if (pessoaSalva == null) {
 			throw new EmptyResultDataAccessException(1);
 		}
 		return pessoaSalva;
 	}
+	
 }

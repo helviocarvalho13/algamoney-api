@@ -13,6 +13,5 @@ public class AlgamoneyApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AlgamoneyApiApplication.class, args);
 	}
-
+	
 }
-
