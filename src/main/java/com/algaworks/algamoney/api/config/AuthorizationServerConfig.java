@@ -54,7 +54,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		endpoints
 			.tokenStore(tokenStore())
 			.tokenEnhancer(tokenEnhancerChain)
-			.accessTokenConverter(accessTokenConverter())
+//			.accessTokenConverter(accessTokenConverter())
 			.reuseRefreshTokens(false)
 			.authenticationManager(authenticationManager);
 			
@@ -74,9 +74,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Bean
 	public TokenEnhancer tokenEnhancer() {
-		// TODO Auto-generated method stub
 		return new CustomTokenEnhancer();
 	}
-
 
 }
